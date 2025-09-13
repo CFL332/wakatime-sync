@@ -1,7 +1,7 @@
 name: Update gist with WakaTime summary
 on:
   schedule:
-    - cron: '40 1 * * *'
+    - cron: '0 */1 * * *'
   workflow_dispatch:  # 新增这一行，启用手动触发功能
 jobs:
   update-gist:
