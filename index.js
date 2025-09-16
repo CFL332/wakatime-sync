@@ -36,11 +36,12 @@ function getMessageContent(date, summary) {
   }
 }
 
-function getMySummary(date) {
+// 查询指定日期范围的数据
+function getMySummary(startDate, endDate) {
   return Axios.get(summariesApi, {
     params: {
-      start: date,
-      end: date,
+      start: startDate,
+      end: endDate,
       api_key: WAKATIME_API_KEY
     }
   }).then(response => response.data)
@@ -84,11 +85,15 @@ async function sendMessageToWechat(text, desp) {
 }
 
 const fetchSummaryWithRetry = async times => {
+  // 查询从昨天0点到今天0点的数据
+  const today = dayjs().format('YYYY-MM-DD')
   const yesterday = dayjs()
     .subtract(1, 'day')
     .format('YYYY-MM-DD')
   try {
-    const mySummary = await getMySummary(yesterday)
+    // 调用API查询昨天的数据
+    const mySummary = await getMySummary(yesterday, yesterday)
+    // 仍然使用昨天的日期作为文件名，保持一致性
     await updateGist(yesterday, mySummary.data)
     await sendMessageToWechat(
       `${yesterday} update successfully!`,
