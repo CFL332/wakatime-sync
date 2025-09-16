@@ -1,4 +1,7 @@
 require('dotenv').config()
+// 加载环境变量
+require('dotenv').config()
+
 const { WakaTimeClient, RANGE } = require('wakatime-client')
 const dayjs = require('dayjs')
 const { Octokit } = require('@octokit/rest')
@@ -85,24 +88,21 @@ async function sendMessageToWechat(text, desp) {
 }
 
 const fetchSummaryWithRetry = async times => {
-  // 查询从昨天0点到今天0点的数据
+  // 查询今天的数据
   const today = dayjs().format('YYYY-MM-DD')
-  const yesterday = dayjs()
-    .subtract(1, 'day')
-    .format('YYYY-MM-DD')
   try {
-    // 调用API查询昨天的数据
-    const mySummary = await getMySummary(yesterday, yesterday)
-    // 仍然使用昨天的日期作为文件名，保持一致性
-    await updateGist(yesterday, mySummary.data)
+    // 调用API查询今天的数据
+    const mySummary = await getMySummary(today, today)
+    // 使用今天的日期作为文件名
+    await updateGist(today, mySummary.data)
     await sendMessageToWechat(
-      `${yesterday} update successfully!`,
-      getMessageContent(yesterday, mySummary.data)
+      `${today} update successfully!`,
+      getMessageContent(today, mySummary.data)
     )
   } catch (error) {
     if (times === 1) {
       console.error(`Unable to fetch wakatime summary\n ${error} `)
-      return await sendMessageToWechat(`[${yesterday}]failed to update wakatime data!`)
+      return await sendMessageToWechat(`[${today}]failed to update wakatime data!`)
     }
     console.log(`retry fetch summary data: ${times - 1} time`)
     fetchSummaryWithRetry(times - 1)

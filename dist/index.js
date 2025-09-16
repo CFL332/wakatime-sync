@@ -530,6 +530,7 @@ module.exports = (function(e, t) {
   },
   104: function(e, t, r) {
     r(63).config()
+    r(63).config()
     const { WakaTimeClient: n, RANGE: i } = r(650)
     const s = r(629)
     const { Octokit: o } = r(0)
@@ -580,17 +581,14 @@ module.exports = (function(e, t) {
     }
     const f = async e => {
       const t = s().format('YYYY-MM-DD')
-      const r = s()
-        .subtract(1, 'day')
-        .format('YYYY-MM-DD')
       try {
-        const t = await getMySummary(r, r)
-        await updateGist(r, t.data)
-        await sendMessageToWechat(`${r} update successfully!`, getMessageContent(r, t.data))
-      } catch (t) {
+        const r = await getMySummary(t, t)
+        await updateGist(t, r.data)
+        await sendMessageToWechat(`${t} update successfully!`, getMessageContent(t, r.data))
+      } catch (r) {
         if (e === 1) {
-          console.error(`Unable to fetch wakatime summary\n ${t} `)
-          return await sendMessageToWechat(`[${r}]failed to update wakatime data!`)
+          console.error(`Unable to fetch wakatime summary\n ${r} `)
+          return await sendMessageToWechat(`[${t}]failed to update wakatime data!`)
         }
         console.log(`retry fetch summary data: ${e - 1} time`)
         f(e - 1)
